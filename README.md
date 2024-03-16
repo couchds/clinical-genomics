@@ -1,2 +1,2 @@
-# patient-genomics-viz
-Playing around with some visualizations/tools to visualize patient genomic data.
+# clinical-genomics
+Playing around with some analysis/visualization tools to assist understanding clinical genomic data.
