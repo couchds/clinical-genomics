@@ -17,6 +17,13 @@ export default function Home() {
         <h1 className={styles.title}>
           Hello!
         </h1>
+
+        <ul>
+          <li>
+            Hierarchical Clustering
+          </li>
+        </ul>
+
       </main>
     </>
   )
