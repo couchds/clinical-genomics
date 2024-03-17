@@ -7,4 +7,4 @@ Minimal for now, just serving as proof-of-concept. This is a separate service fr
 ## How to run:
 First, set the following environmental variables to configure connection to a databaes. At the moment this only works with MySQL.
 * `DB_URL`
-* `
+...
