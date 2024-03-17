@@ -99,7 +99,28 @@ export default function HierarchicalClustering() {
       const g = graph(family);
     }, []);
 
+  const data = {'test': true};
+  
+  const handleButtonClick = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/h-clustering', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: data }),
+      });
 
+      if (response.ok) {
+        const result = await response.json();
+      } else {
+        alert('Failed to send data');
+      }
+    } catch (error) {
+      console.error('Error sending data:', error);
+      alert('Error sending data. See console for details.');
+    }
+  };
   
   return (
     <div>
@@ -111,6 +132,7 @@ export default function HierarchicalClustering() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Hierarchical Clustering</h1>
+        <button id="run-clustering-btn" onClick={handleButtonClick}>Run Clustering</button>
       </main>
 
       <div id="cluster"></div>
