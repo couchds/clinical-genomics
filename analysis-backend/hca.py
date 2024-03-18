@@ -25,17 +25,16 @@ DB_CONFIG = {
     'database': database
 }
 
-def create_distance_matrix():
+def create_distance_matrix(include_zeros=True, include_diagonal=True):
     """ Create distance matrix between all samples.
-    NOTE: Not including mutation info at the moment
+    TODO: How do we handle mutation data?
+    TODO: Variable names wrong
     """
     conn = mysql.connector.connect(**DB_CONFIG)
-    query = "SELECT SampleName, Hugo_Symbol FROM TCGA2015 WHERE RSEM_Zscore>3 AND CNA>2 AND oncokbAnnotated is true"
-    print(query)
+    query = "SELECT SampleName, Hugo_Symbol FROM TCGA2015 WHERE RSEM_Zscore>3 AND CNA>3 AND oncokbAnnotated is true"
     cursor = conn.cursor(dictionary=True)
     cursor.execute(query)
     rows = cursor.fetchall()
-    print(rows)
     sample_geneset_map = {}
     for row in rows:
         samplename = row['SampleName']
@@ -54,29 +53,29 @@ def create_distance_matrix():
             union = sample1_geneset.union(sample2_geneset)
             proportion_union = len(intersection) / len(union)
             adjacency_list[sample1][sample2] = proportion_union
-    
+            if include_zeros is False and abs(proportion_union) < 0.001:
+                del adjacency_list[sample1][sample2]
+        if include_diagonal is False:
+            del adjacency_list[sample1][sample1]
+    print(adjacency_list)
     return adjacency_list
-    #return set(rows)
 
-adj_list = create_distance_matrix()
 
-# Extract unique nodes and sort them to ensure consistent ordering
+adj_list = create_distance_matrix(include_zeros=False, include_diagonal=False)
+
 nodes = sorted(adj_list.keys())
 
-# Initialize an empty adjacency matrix
 adjacency_matrix = np.zeros((len(nodes), len(nodes)))
 
-# Fill the adjacency matrix with values from the adjacency list
 for i, node_i in enumerate(nodes):
     for j, node_j in enumerate(nodes):
-        adjacency_matrix[i, j] = adj_list[node_i].get(node_j, 0)  # Use .get() to handle missing entries
+        adjacency_matrix[i, j] = adj_list[node_i].get(node_j, 0)
 
 print("Adjacency Matrix:")
 print(adjacency_matrix)
 
-Z = linkage(adjacency_matrix, 'single')  # 'single' linkage; you might choose another
+Z = linkage(adjacency_matrix, 'single')
 
-# Plot dendrogram
 plt.figure(figsize=(10, 7))
 dendrogram(Z, labels=nodes)
 plt.title("Hierarchical Clustering Dendrogram")
