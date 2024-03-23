@@ -25,13 +25,13 @@ DB_CONFIG = {
     'database': database
 }
 
-def create_distance_matrix(include_zeros=True, include_diagonal=True):
+def create_distance_matrix(include_zeros=True, include_diagonal=True, rsemz=3, cna=3):
     """ Create distance matrix between all samples.
     TODO: How do we handle mutation data?
     TODO: Variable names wrong
     """
     conn = mysql.connector.connect(**DB_CONFIG)
-    query = "SELECT SampleName, Hugo_Symbol FROM TCGA2015 WHERE RSEM_Zscore>3 AND CNA>3 AND oncokbAnnotated is true"
+    query = f"SELECT SampleName, Hugo_Symbol FROM TCGA2015 WHERE RSEM_Zscore>{rsemz} AND CNA>{cna} AND oncokbAnnotated is true"
     cursor = conn.cursor(dictionary=True)
     cursor.execute(query)
     rows = cursor.fetchall()

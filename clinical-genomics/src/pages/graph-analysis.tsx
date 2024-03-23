@@ -1,6 +1,6 @@
 
 import Head from 'next/head';
-import styles from '../styles/HierarchicalClustering.module.css';
+import styles from '../styles/GraphAnalysis.module.css';
 
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
@@ -10,6 +10,8 @@ export default function GraphAnalysis() {
 
   const [oncogeneList, setOncogeneList] = useState('');
   const [sampleName, setSampleName] = useState('');
+  const [rsemzValue, setRsemzValue] = useState('');
+  const [cnaValue, setCnaValue] = useState('');
   
   const handleNodeClick = async (d) => {
     console.log(d);
@@ -37,7 +39,7 @@ export default function GraphAnalysis() {
 
     // Specify the dimensions of the chart.
     const width = 1400;
-    const height = 800;
+    const height = 500;
   
     // Specify the color scale.
     const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -151,7 +153,8 @@ export default function GraphAnalysis() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({ rsemz: rsemzValue, cna: cnaValue }),
       });
 
       if (response.ok) {
@@ -186,6 +189,14 @@ export default function GraphAnalysis() {
       alert('Error sending data. See console for details.');
     }
   };
+
+  const handleRsemzChange = (e) => {
+    setRsemzValue(e.target.value);
+  };
+  
+  const handleCnaChange = (e) => {
+    setCnaValue(e.target.value);
+  };
   
   return (
     <div>
@@ -197,11 +208,31 @@ export default function GraphAnalysis() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Graph Analysis</h1>
-        <button id="run-clustering-btn" onClick={handleButtonClick}>Run Clustering</button>
-      </main>
+        
+        <div className={styles.formContainer}>
+          <label htmlFor="inputField" className={styles.inputLabel}>RSEM Z-score</label>
+          <input
+            type="text"
+            value={rsemzValue}
+            onChange={handleRsemzChange}
+            className={styles.inputField}
+          />
 
-      <div style={{marginLeft: '20vw'}} id="selected-sample">{sampleName}: <br /><br /> { oncogeneList }</div>
-      <div id="cluster"></div>
+          <label htmlFor="inputField" className={styles.inputLabel}>CNA</label>
+          <input
+            type="text"
+            value={cnaValue}
+            onChange={handleCnaChange}
+            className={styles.inputField}
+          />
+        </div>
+
+        <button id="run-clustering-btn" className={styles.submitButton} onClick={handleButtonClick}>Run Clustering</button>
+
+        <br></br>
+        <div style={{marginLeft: '20vw', fontFamily: 'arial'}} id="selected-sample">{sampleName}: <br /><br /> { oncogeneList }</div>
+        <div id="cluster"></div>
+      </main>
     </div>
   );
 }

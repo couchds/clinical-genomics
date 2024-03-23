@@ -65,7 +65,8 @@ def handle_data():
 
 @app.route('/api/distance-matrix', methods=['POST'])
 def distance_matrix():
-    dist_mat = create_distance_matrix(include_zeros=False, include_diagonal=False)
+    data = request.json
+    dist_mat = create_distance_matrix(include_zeros=False, include_diagonal=False, rsemz=data['rsemz'], cna=data['cna'])
     return jsonify(dist_mat), 200
 
 @app.route('/api/functional-oncogenes', methods=['GET'])

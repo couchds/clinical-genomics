@@ -16,10 +16,47 @@
     line-height: 1.15;
     font-size: 4rem;
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .description {
     text-align: center;
     margin: 4rem 0;
     font-size: 1.5rem;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+    padding: 20px;
+}
+
+
+.inputLabel {
+    font-family: arial;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.inputField{
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.submitButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: darkblue;
 }

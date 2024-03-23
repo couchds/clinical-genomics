@@ -56,8 +56,6 @@ function graph(root: any, {
     .join("g")
       .attr("transform", d => `translate(${d.y},${d.x})`);
 
-  console.log(node);
-
   node.append("circle")
       .attr("fill", d => highlight(d) ? "red" : d.children ? "#555" : "#999")
       .attr("r", 2.5);
